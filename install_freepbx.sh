@@ -32,14 +32,14 @@ sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.a
 sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.8/ubuntu focal main'
 sudo apt update
 
-# Install PHP8.1
+# Install PHP7.4
 sudo apt install ca-certificates apt-transport-https software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
 # Freepbx dependencies
-sudo apt install php8.1 php8.1-cli php8.1-bcmath php8.1-curl php8.1-gd php8.1-intl php8.1-ldap php8.1-mbstring php8.1-mysql php8.1-xml \
-php8.1-json php8.1-common php8.1-zip libapache2-mod-php8.1 -y
+sudo apt install php7.4 php7.4-cli php7.4-bcmath php7.4-curl php7.4-gd php7.4-intl php7.4-ldap php7.4-mbstring php7.4-mysql php7.4-xml \
+php7.4-json php7.4-common php7.4-zip libapache2-mod-php7.4 -y
 sudo apt install apache2 mariadb-server mariadb-client libmariadb-dev -y
 
 #sudo mysql_secure_installation 
@@ -49,15 +49,15 @@ sudo rm /etc/mysql/mariadb.conf.d/50-server.cnf
 cd /etc/mysql/mariadb.conf.d/
 wget https://raw.githubusercontent.com/hrmuwanika/vicidial-install-scripts/main/50-server.cnf
 
-sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/8.1/cli/php.ini
-sudo sed -i 's|128M|256M|' /etc/php/8.1/cli/php.ini
+sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/cli/php.ini
+sudo sed -i 's|128M|256M|' /etc/php/7.4/cli/php.ini
 
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf_orig
-sudo sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/8.1/apache2/php.ini
-sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/8.1/apache2/php.ini
+sudo sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/7.4/apache2/php.ini
+sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/apache2/php.ini
 sudo sed -i 's/^\(User\|Group\).*/\1 asterisk/' /etc/apache2/apache2.conf
 sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
-sudo sed -i 's|128M|256M|' /etc/php/8.1/apache2/php.ini
+sudo sed -i 's|128M|256M|' /etc/php/7.4/apache2/php.ini
 
 a2enmod rewrite
 systemctl restart apache2
