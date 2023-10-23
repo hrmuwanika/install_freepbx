@@ -76,7 +76,7 @@ libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libsp
 dirmngr debhelper-compat cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make -y
 
 curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt install -y nodejs npm
+sudo apt install -y nodejs
 
 #Install Asterisk 20 LTS dependencies
 sudo apt -y install git curl wget libnewt-dev libssl-dev libncurses5-dev subversion libsqlite3-dev build-essential libjansson-dev libxml2-dev uuid-dev
@@ -207,4 +207,14 @@ sudo fwconsole ma delete firewall
 sudo chown fwconsole
 sudo fwconsole reload
 sudo fwconsole restart
+
+# Secure freepbx
+sudo apt -y install fail2ban ufw
+
+sudo systemctl enable fail2ban.service
+sudo systemctl start fail2ban.service
+
+cd /usr/local/bin/
+wget http://www.voipbl.org/voipbl.sh -O /usr/local/bin/voipbl.sh
+chmod +x /usr/local/bin/voipbl.sh
 
