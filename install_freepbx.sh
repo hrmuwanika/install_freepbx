@@ -196,7 +196,7 @@ rm -f freepbx-16.0-latest.tgz
 touch /etc/asterisk/{modules,cdr}.conf
 cd /usr/src/freepbx/
 ./start_asterisk start
-./install -n # --dbuser root --dbpass "yourpassword"
+./install -n           # --dbuser root --dbpass "yourpassword"
 
 sudo a2enmod rewrite
 sudo systemctl restart apache2
@@ -204,7 +204,7 @@ sudo systemctl restart apache2
 sudo fwconsole ma disablerepo commercial
 sudo fwconsole ma installall
 sudo fwconsole ma delete firewall
-sudo chown fwconsole
+sudo fwconsole chown
 sudo fwconsole reload
 sudo fwconsole restart
 
