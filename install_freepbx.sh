@@ -76,7 +76,6 @@ sudo apt install bison flex php-pear sox mpg123 sqlite3 pkg-config automake libt
 libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libspandsp-dev libtool-bin python2-dev unixodbc cron sendmail-bin sendmail \
 dirmngr debhelper-compat cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make -y
 
-
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
 sudo apt install npm
