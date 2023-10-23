@@ -29,16 +29,17 @@ sudo service sshd restart
 
 # Install mariadb databases
 sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.6/ubuntu focal main'
+sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.8/ubuntu focal main'
 sudo apt update
 
-# Install PHP7.4
+# Install PHP8.1
+sudo apt install ca-certificates apt-transport-https software-properties-common -y
 sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
 # Freepbx dependencies
-sudo apt install php7.4 php7.4-cli php7.4-bcmath php7.4-curl php7.4-gd php7.4-intl php7.4-ldap php7.4-mbstring php7.4-mysql php7.4-xml \
-php7.4-json php7.4-common php7.4-zip libapache2-mod-php7.4 -y
+sudo apt install php8.1 php8.1-cli php8.1-bcmath php8.1-curl php8.1-gd php8.1-intl php8.1-ldap php8.1-mbstring php8.1-mysql php8.1-xml \
+php8.1-json php8.1-common php8.1-zip libapache2-mod-php8.1 -y
 sudo apt install apache2 mariadb-server mariadb-client libmariadb-dev -y
 
 #sudo mysql_secure_installation 
@@ -48,15 +49,15 @@ sudo rm /etc/mysql/mariadb.conf.d/50-server.cnf
 cd /etc/mysql/mariadb.conf.d/
 wget https://raw.githubusercontent.com/hrmuwanika/vicidial-install-scripts/main/50-server.cnf
 
-sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/cli/php.ini
-sudo sed -i 's|128M|256M|' /etc/php/7.4/cli/php.ini
+sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/8.1/cli/php.ini
+sudo sed -i 's|128M|256M|' /etc/php/8.1/cli/php.ini
 
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf_orig
-sudo sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/7.4/apache2/php.ini
-sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/apache2/php.ini
+sudo sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/8.1/apache2/php.ini
+sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/8.1/apache2/php.ini
 sudo sed -i 's/^\(User\|Group\).*/\1 asterisk/' /etc/apache2/apache2.conf
 sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
-sudo sed -i 's|128M|256M|' /etc/php/7.4/apache2/php.ini
+sudo sed -i 's|128M|256M|' /etc/php/8.1/apache2/php.ini
 
 a2enmod rewrite
 systemctl restart apache2
@@ -75,8 +76,10 @@ sudo apt install bison flex php-pear sox mpg123 sqlite3 pkg-config automake libt
 libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libspandsp-dev libtool-bin python2-dev unixodbc cron sendmail-bin sendmail \
 dirmngr debhelper-compat cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make -y
 
-curl -sL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+
+curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
+sudo apt install npm
 
 #Install Asterisk 20 LTS dependencies
 sudo apt -y install git curl wget libnewt-dev libssl-dev libncurses5-dev subversion libsqlite3-dev build-essential libjansson-dev libxml2-dev uuid-dev
@@ -123,12 +126,14 @@ sudo make samples
 sudo make config
 
 # Create a separate user and group to run asterisk services, and assign correct permissions:
-sudo groupadd asterisk
-sudo useradd -r -d /var/lib/asterisk -g asterisk asterisk
-sudo usermod -aG audio,dialout asterisk
-sudo chown -R asterisk.asterisk /etc/asterisk
-sudo chown -R asterisk.asterisk /var/{lib,log,spool}/asterisk
-# sudo chown -R asterisk.asterisk /usr/lib/asterisk
+groupadd asterisk
+useradd -r -d /var/lib/asterisk -g asterisk asterisk
+usermod -aG audio,dialout asterisk
+chown -R asterisk.asterisk /etc/asterisk
+chown -R asterisk.asterisk /var/lib/asterisk
+chown -R asterisk.asterisk /var/log/asterisk
+chown -R asterisk.asterisk /var/spool/asterisk
+# chown -R asterisk.asterisk /usr/lib/asterisk
 
 #Set Asterisk default user to asterisk:
 sed -i 's|#AST_USER|AST_USER|' /etc/default/asterisk
@@ -196,7 +201,7 @@ rm -f freepbx-16.0-latest.tgz
 touch /etc/asterisk/{modules,cdr}.conf
 cd /usr/src/freepbx/
 ./start_asterisk start
-./install -n           # --dbuser root --dbpass "yourpassword"
+./install -n          
 
 sudo a2enmod rewrite
 sudo systemctl restart apache2
@@ -215,6 +220,6 @@ sudo systemctl enable fail2ban.service
 sudo systemctl start fail2ban.service
 
 cd /usr/local/bin/
-wget http://www.voipbl.org/voipbl.sh -O /usr/local/bin/voipbl.sh
+wget https://raw.githubusercontent.com/hrmuwanika/install_freepbx/main/voipbl.sh
 chmod +x /usr/local/bin/voipbl.sh
 
