@@ -75,11 +75,11 @@ sudo systemctl enable mariadb
 
 sudo apt install bison flex sox mpg123 sqlite3 pkg-config automake libtool autoconf unixodbc-dev uuid libasound2-dev libcurl4-openssl-dev ffmpeg \
 libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libspandsp-dev libtool-bin python2-dev unixodbc cron sendmail-bin sendmail \
-dirmngr debhelper-compat cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make unzip gnupg2 -y
+dirmngr debhelper-compat cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make unzip gnupg2 mongodb -y
 
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
-sudo apt install npm
+sudo apt install -y npm
 
 #Install Asterisk 20 LTS dependencies
 sudo apt -y install git curl wget libnewt-dev libssl-dev libncurses5-dev subversion libsqlite3-dev build-essential libjansson-dev libxml2-dev uuid-dev
@@ -212,6 +212,26 @@ sudo fwconsole ma delete firewall
 sudo fwconsole chown
 sudo fwconsole reload
 sudo fwconsole restart
+
+cat <<EOF > /etc/systemd/system/freepbx.service
+
+[Unit]
+Description=FreePBX VoIP Server
+After=mariadb.service
+ 
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/fwconsole start -q
+ExecStop=/usr/sbin/fwconsole stop -q
+ 
+[Install]
+WantedBy=multi-user.target
+
+EOF
+
+systemctl enable freepbx.service
+systemctl restart freepbx.service
 
 # Secure freepbx
 sudo apt -y install fail2ban ufw
