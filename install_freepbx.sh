@@ -38,7 +38,8 @@ sudo apt update
 
 # Freepbx dependencies
 sudo apt install php7.4 php7.4-cli php7.4-bcmath php7.4-curl php7.4-gd php7.4-intl php7.4-ldap php7.4-mbstring php7.4-mysql php7.4-xml \
-php7.4-json php7.4-common php7.4-zip libapache2-mod-php7.4 -y
+php7.4-json php7.4-common php7.4-zip libapache2-mod-php7.4 php7.4-snmp php7.4-imap php7.4-cgi php7.4-imagick php7.4-xmlrpc php-pear -y
+
 sudo apt install apache2 mariadb-server mariadb-client libmariadb-dev -y
 
 #sudo mysql_secure_installation 
@@ -54,6 +55,7 @@ sudo sed -i 's|128M|256M|' /etc/php/7.4/cli/php.ini
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf_orig
 sudo sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/7.4/apache2/php.ini
 sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/apache2/php.ini
+sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/7.4/cli/php.ini
 sudo sed -i 's/^\(User\|Group\).*/\1 asterisk/' /etc/apache2/apache2.conf
 sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 sudo sed -i 's|128M|256M|' /etc/php/7.4/apache2/php.ini
@@ -71,9 +73,9 @@ sudo systemctl enable apache2
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
-sudo apt install bison flex php-pear sox mpg123 sqlite3 pkg-config automake libtool autoconf unixodbc-dev uuid libasound2-dev libcurl4-openssl-dev ffmpeg \
+sudo apt install bison flex sox mpg123 sqlite3 pkg-config automake libtool autoconf unixodbc-dev uuid libasound2-dev libcurl4-openssl-dev ffmpeg \
 libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libspandsp-dev libtool-bin python2-dev unixodbc cron sendmail-bin sendmail \
-dirmngr debhelper-compat cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make -y
+dirmngr debhelper-compat cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make unzip gnupg2 -y
 
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
