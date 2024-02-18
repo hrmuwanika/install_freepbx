@@ -104,10 +104,12 @@ sudo contrib/scripts/get_mp3_source.sh
 sudo contrib/scripts/install_prereq install
 
 #Run the configure script to satisfy build dependencies
-sudo ./configure --libdir=/usr/lib64 --with-pjproject-bundled --with-jansson-bundled
+sudo ./configure  --libdir=/usr/lib64 --with-pjproject-bundled --with-jansson-bundled
 
 #Setup menu options by running the following command:
-sudo make menuselect
+make menuselect.makeopts
+menuselect/menuselect --enable app_macro menuselect.makeopts
+make menuselect
 
 #Use arrow keys to navigate, and Enter key to select. On Add-ons select chan_ooh323 and format_mp3 . 
 #On Core Sound Packages, select the formats of Audio packets. Music On Hold, select 'Music onhold file package' 
