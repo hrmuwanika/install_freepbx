@@ -1,15 +1,14 @@
 #!/bin/sh
-# Install Freepbx 16 with Asterisk 20 on Ubuntu 20.04
+# Install Freepbx 17 with Asterisk 20 on Ubuntu 20.04
 
 #--------------------------------------------------
 # Update Server
 #--------------------------------------------------
-echo -e "\n============= Update Server ================"
 sudo apt update && sudo apt -y upgrade 
 sudo apt autoremove -y
 
 # need to find odbc-mariadb replacement
-apt-get install -y linux-headers-`uname -r`
+apt-get install -y linux-headers-`uname -r` 
 
 #--------------------------------------------------
 # Set up the timezones
@@ -32,15 +31,17 @@ sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.l
 sudo apt update
 
 # Install PHP7.4
-sudo apt install ca-certificates apt-transport-https software-properties-common -y
+sudo apt install -y ca-certificates apt-transport-https software-properties-common 
 sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
 # Freepbx dependencies
-sudo apt install -y php8.2 php8.2-cli php8.2-bcmath php8.2-curl php8.2-gd php8.2-intl php8.2-ldap php8.2-mbstring php8.2-mysql php8.2-xml \
-php8.2-json php8.2-common php8.2-zip libapache2-mod-php8.2 php8.2-snmp php8.2-imap php8.2-cgi php8.2-imagick php8.2-xmlrpc php-pear 
+sudo apt install -y php8.2 php8.2-cli php8.2-common php8.2-curl php8.2-mysql php8.2-gd php8.2-mbstring php8.2-intl php8.2-xml php-pear \
+curl
 
-sudo apt install apache2 mariadb-server mariadb-client libmariadb-dev -y
+php8.2-json  php8.2-zip libapache2-mod-php8.2 php8.2-snmp php8.2-imap php8.2-cgi php8.2-imagick php8.2-xmlrpc  
+
+sudo apt install -y apache2 mariadb-server mariadb-client libmariadb-dev odbc-mariadb 
 
 #sudo mysql_secure_installation 
 
@@ -55,7 +56,6 @@ sudo sed -i 's|128M|256M|' /etc/php/8.2/cli/php.ini
 sudo cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf_orig
 sudo sed -i 's/\(^memory_limit = \).*/\1256M/' /etc/php/8.2/apache2/php.ini
 sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/8.2/apache2/php.ini
-sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/8.2/cli/php.ini
 sudo sed -i 's/^\(User\|Group\).*/\1 asterisk/' /etc/apache2/apache2.conf
 sudo sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf
 sudo sed -i 's|128M|256M|' /etc/php/8.2/apache2/php.ini
@@ -73,9 +73,9 @@ sudo systemctl enable apache2
 sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
-sudo apt install bison flex sox mpg123 sqlite3 pkg-config automake libtool autoconf unixodbc-dev uuid libasound2-dev libcurl4-openssl-dev ffmpeg \
-libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libspandsp-dev libtool-bin unixodbc cron sendmail-bin  \
-dirmngr debhelper cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make unzip gnupg2  -y
+sudo apt install -y bison flex sox mpg123 sqlite3 pkg-config automake libtool autoconf unixodbc-dev uuid libasound2-dev libcurl4-openssl-dev ffmpeg \
+libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libspandsp-dev libtool-bin unixodbc cron sendmail-bin ipset  \
+dirmngr debhelper cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make unzip gnupg2 htop sngrep 
 
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
@@ -91,7 +91,7 @@ sudo apt update && sudo apt -y install subversion
 #Download Asterisk 20 LTS tarball
 # sudo apt policy asterisk
 cd /usr/src/
-sudo curl -O http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-20-current.tar.gz
+sudo wget http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-20-current.tar.gz
 
 #Extract the file
 tar xvf asterisk-20-current.tar.gz
@@ -135,7 +135,7 @@ chown -R asterisk.asterisk /etc/asterisk
 chown -R asterisk.asterisk /var/lib/asterisk
 chown -R asterisk.asterisk /var/log/asterisk
 chown -R asterisk.asterisk /var/spool/asterisk
-# chown -R asterisk.asterisk /usr/lib/asterisk
+chown -R asterisk.asterisk /usr/lib64/asterisk
 
 #Set Asterisk default user to asterisk:
 sed -i 's|#AST_USER|AST_USER|' /etc/default/asterisk
@@ -232,11 +232,12 @@ WantedBy=multi-user.target
 
 EOF
 
+systemctl daemon-reload
 systemctl enable freepbx.service
 systemctl restart freepbx.service
 
 # Secure freepbx
-sudo apt -y install fail2ban ufw
+sudo apt -y install iptables fail2ban
 
 sudo systemctl enable fail2ban.service
 sudo systemctl start fail2ban.service
