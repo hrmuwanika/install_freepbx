@@ -1,5 +1,5 @@
 #!/bin/sh
-# Install Freepbx 17 with Asterisk 20 on Ubuntu 20.04
+# Install Freepbx 17 with Asterisk 20 on Ubuntu 22.04
 
 #--------------------------------------------------
 # Update Server
@@ -65,8 +65,8 @@ sudo systemctl start mariadb
 sudo systemctl enable mariadb
 
 sudo apt install -y bison flex sox mpg123 sqlite3 pkg-config automake libtool autoconf unixodbc-dev uuid libasound2-dev libcurl4-openssl-dev ffmpeg \
-libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libspandsp-dev libtool-bin unixodbc cron sendmail-bin ipset  \
-dirmngr debhelper cmake mailutils dnsutils apt-utils dialog lame postfix odbc-mariadb pkg-config libicu-dev gcc g++ make unzip gnupg2 htop sngrep 
+libogg-dev libvorbis-dev libicu-dev libical-dev libneon27-dev libsrtp2-dev libspandsp-dev libtool-bin unixodbc cron ipset htop sngrep gnupg2 unzip \
+dirmngr debhelper cmake mailutils dnsutils apt-utils dialog lame odbc-mariadb pkg-config libicu-dev gcc g++ make  
 
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
