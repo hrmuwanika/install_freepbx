@@ -25,12 +25,7 @@ sudo sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
 sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
 sudo service sshd restart
 
-# Install mariadb databases
-sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.liquidtelecom.com/repo/10.8/ubuntu focal main'
-sudo apt update
-
-# Install PHP7.4
+# Install PHP8.2
 sudo apt install -y ca-certificates apt-transport-https software-properties-common 
 sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
