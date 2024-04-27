@@ -1,5 +1,5 @@
 #!/bin/sh
-# Install Freepbx 17 with Asterisk 20 on Debian 12 (Bookworm)
+# Install Freepbx 17 with Asterisk 20 on Ubuntu 22.04
 
 #--------------------------------------------------
 # Update Server
@@ -233,8 +233,4 @@ sudo apt -y install iptables fail2ban
 
 sudo systemctl enable fail2ban.service
 sudo systemctl start fail2ban.service
-
-cd /usr/local/bin/
-wget https://raw.githubusercontent.com/hrmuwanika/install_freepbx/main/voipbl.sh
-chmod +x /usr/local/bin/voipbl.sh
 
