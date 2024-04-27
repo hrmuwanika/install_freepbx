@@ -31,8 +31,7 @@ sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
 # Freepbx dependencies
-sudo apt -y install php8.2 php8.2-curl php8.2-cli php8.2-mysql php8.2-mbstring php8.2-gd php8.2-xml php8.2-intl php8.2-redis php8.2-bz2 php8.2-ldap \
-php-pear libapache2-mod-php
+apt install -y php8.2 php8.2-cli php8.2-common php8.2-curl php8.2-mysql php8.2-gd php8.2-mbstring php8.2-intl php8.2-xml php-pear curl
 
 # Install mariadb databases
 sudo curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=11.2
