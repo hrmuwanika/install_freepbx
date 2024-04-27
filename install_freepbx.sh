@@ -1,5 +1,5 @@
 #!/bin/sh
-# Install Freepbx 17 with Asterisk 20 on Ubuntu 22.04
+# Install Freepbx 17 with Asterisk 20 on Debian 12 (Bookworm)
 
 #--------------------------------------------------
 # Update Server
@@ -31,7 +31,8 @@ sudo add-apt-repository ppa:ondrej/php  -y
 sudo apt update
 
 # Freepbx dependencies
-sudo apt install -y php8.2 php8.2-cli php8.2-common php8.2-curl php8.2-mysql php8.2-gd php8.2-mbstring php8.2-intl php8.2-xml php-pear curl
+sudo apt -y install php8.2 php8.2-curl php8.2-cli php8.2-mysql php8.2-mbstring php8.2-gd php8.2-xml php8.2-intl php8.2-redis php8.2-bz2 php8.2-ldap \
+php-pear libapache2-mod-php
 
 # Install mariadb databases
 sudo curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=11.2
@@ -93,10 +94,11 @@ tar xvf asterisk-20-current.tar.gz
 cd asterisk-20*/
 
 #download the mp3 decoder library
-sudo contrib/scripts/get_mp3_source.sh
+sudo ./contrib/scripts/get_mp3_source.sh
 
 #Ensure all dependencies are resolved
-sudo contrib/scripts/install_prereq install
+sudo ./contrib/scripts/install_prereq install
+make distclean
 
 #Run the configure script to satisfy build dependencies
 sudo ./configure  --libdir=/usr/lib64 --with-pjproject-bundled --with-jansson-bundled
@@ -192,10 +194,7 @@ Option = 3
 EOF
 
 cd /usr/src
-wget http://mirror.freepbx.org/modules/packages/freepbx/freepbx-17.0-latest-EDGE.tgz
-tar zxvf freepbx-17.0-latest-EDGE.tgz
-rm -f freepbx-17.0-latest-EDGE.tgz
-touch /etc/asterisk/{modules,cdr}.conf
+git clone -b release/17.0 --single-branch https://github.com/freepbx/framework.git freepbx
 cd /usr/src/freepbx/
 ./start_asterisk start
 ./install -n          
@@ -203,9 +202,7 @@ cd /usr/src/freepbx/
 sudo a2enmod rewrite
 sudo systemctl restart apache2
 
-sudo fwconsole ma disablerepo commercial
 sudo fwconsole ma installall
-sudo fwconsole ma delete firewall
 sudo fwconsole chown
 sudo fwconsole reload
 sudo fwconsole restart
