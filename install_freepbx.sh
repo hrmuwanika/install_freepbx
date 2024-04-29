@@ -7,8 +7,7 @@
 sudo apt update && sudo apt -y upgrade 
 sudo apt autoremove -y
 
-# need to find odbc-mariadb replacement
-apt-get install -y linux-headers-`uname -r` 
+apt install -y locales && dpkg-reconfigure locales
 
 #--------------------------------------------------
 # Set up the timezones
