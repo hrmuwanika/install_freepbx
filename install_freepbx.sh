@@ -7,7 +7,7 @@
 sudo apt update && sudo apt -y upgrade 
 sudo apt autoremove -y
 
-apt install -y locales && dpkg-reconfigure locales
+sudo apt install -y locales && dpkg-reconfigure locales
 
 #--------------------------------------------------
 # Set up the timezones
@@ -26,15 +26,17 @@ sudo service sshd restart
 
 # Install PHP8.2
 sudo apt install -y ca-certificates apt-transport-https software-properties-common 
-sudo add-apt-repository ppa:ondrej/php  -y
+sudo wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/php.list
 sudo apt update
 
 # Freepbx dependencies
-apt install -y php8.2 php8.2-cli php8.2-common php8.2-curl php8.2-mysql php8.2-gd php8.2-mbstring php8.2-intl php8.2-xml php-pear curl
+apt install -y php8.2 php8.2-cli php8.2-common php8.2-curl php8.2-mysql php8.2-gd php8.2-mbstring php8.2-intl php8.2-xml php8.2-bz2 php8.2-ldap php-pear curl
 
 # Install mariadb databases
 sudo curl -LsS https://downloads.mariadb.com/MariaDB/mariadb_repo_setup | sudo bash -s -- --mariadb-server-version=11.2
 sudo apt update 
+
 sudo apt install -y apache2 mariadb-server mariadb-client libmariadb-dev odbc-mariadb 
 
 #sudo mysql_secure_installation 
@@ -73,7 +75,7 @@ dirmngr debhelper cmake mailutils dnsutils apt-utils dialog lame odbc-mariadb pk
 
 curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 sudo apt install -y nodejs
-sudo apt install -y npm
+#sudo apt install -y npm
 
 #Install Asterisk 20 LTS dependencies
 sudo apt -y install git curl wget libnewt-dev libssl-dev libncurses5-dev subversion libsqlite3-dev build-essential libjansson-dev libxml2-dev uuid-dev
@@ -111,6 +113,7 @@ make menuselect
 # select Extra Sound Packages
 #Enable app_macro under Applications menu
 #Change other configurations as required
+adduser asterisk --disabled-password --gecos "Asterisk User"
 
 #build Asterisk
 sudo make
@@ -153,9 +156,6 @@ sed -i 's";radiuscfg => /usr/local/etc/radiusclient-ng/radiusclient.conf"radiusc
 sudo systemctl daemon-reload
 sudo systemctl enable asterisk
 sudo systemctl restart asterisk
-
-#Test to see if it connect to Asterisk CLI
-sudo asterisk -rvv
 
 #open http ports and ports 5060,5061 in ufw firewall
 sudo ufw allow 80/tcp
@@ -219,7 +219,6 @@ ExecStop=/usr/sbin/fwconsole stop -q
  
 [Install]
 WantedBy=multi-user.target
-
 EOF
 
 systemctl daemon-reload
