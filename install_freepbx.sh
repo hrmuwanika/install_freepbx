@@ -87,15 +87,18 @@ sudo apt update && sudo apt -y install subversion
 # Install Libpri and Dahdi
 wget http://downloads.asterisk.org/pub/telephony/libpri/libpri-1-current.tar.gz
 tar -zxvf libpri-1-current.tar.gz
-cd libpri-1*
+cd libpri-1.*
 make
 make install
+cd ..
 
+# Install Dahdi
 wget http://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz
-tar -zxvf dahdi-linux-complete.tar.gz
-cd dahdi-linux-complete
+tar -zxvf dahdi-linux-complete-current.tar.gz
+cd dahdi-linux-complete*
 make 
 make install
+cd ..
 
 #Download Asterisk 20 LTS tarball
 # sudo apt policy asterisk
