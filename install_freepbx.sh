@@ -44,7 +44,7 @@ sudo apt install -y apache2 mariadb-server mariadb-client libmariadb-dev odbc-ma
 # Remove mariadb strict mode by setting sql_mode = NO_ENGINE_SUBSTITUTION
 sudo rm /etc/mysql/mariadb.conf.d/50-server.cnf
 cd /etc/mysql/mariadb.conf.d/
-wget https://raw.githubusercontent.com/hrmuwanika/vicidial-install-scripts/main/50-server.cnf
+wget https://raw.githubusercontent.com/hrmuwanika/install_freepbx/main/50-server.cnf
 
 sudo sed -i 's/\(^upload_max_filesize = \).*/\120M/' /etc/php/8.2/cli/php.ini
 sudo sed -i 's|128M|256M|' /etc/php/8.2/cli/php.ini
